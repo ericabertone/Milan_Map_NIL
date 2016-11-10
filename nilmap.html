@@ -258,6 +258,35 @@ function textArt(text){
   var selection = effectLayer.selectAll('text')
     .data(positions, function(d){return d.text+'/'+d.index;});
 
+  // Clear old ones
+  selection.exit().transition()
+    .style('opacity', 0)
+    .remove();
+
+  // Create text but set opacity to 0
+  selection.enter().append('text')
+    .text(function(d){return d.text;})
+    .attr('x', function(d){return d.x;})
+    .attr('y', function(d){return d.y;})
+    .style('font-family', fontFamily)
+    .style('fill', '#777')
+    .style('opacity', 0);
+
+  selection
+    .style('font-family', fontFamily)
+    .attr('x', function(d){return d.x;})
+    .attr('y', function(d){return d.y;});
+
+  // Create transtion to increase opacity from 0 to 0.1-0.5
+  // Add delay based on distance from the center of the <svg> and a bit more randomness.
+  selection.transition()
+    .delay(function(d){
+      return d.distance * 0.01 + Math.random()*1000;
+    })
+    .style('opacity', function(d){
+      return 0.1 + Math.random()*0.4;
+    });
+
 
 }
 
